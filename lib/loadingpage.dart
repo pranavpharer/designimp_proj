@@ -161,3 +161,84 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 }
+
+
+class AnimatedPolygon extends StatefulWidget {
+  final int sides;
+  final double radius;
+  final double rotation;
+
+  const AnimatedPolygon({
+    required this.sides,
+    required this.radius,
+    required this.rotation,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedPolygon> createState() => _AnimatedPolygonState();
+}
+
+class _AnimatedPolygonState extends State<AnimatedPolygon> {
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _PolygonPainter(
+        sides: widget.sides,
+        radius: widget.radius,
+        rotation: widget.rotation,
+      ),
+    );
+  }
+}
+
+class _PolygonPainter extends CustomPainter {
+  final int sides;
+  final double radius;
+  final double rotation;
+
+  const _PolygonPainter({
+    required this.sides,
+    required this.radius,
+    required this.rotation,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.blue
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 3;
+
+    final path = Path();
+
+    final center = Offset(size.width / 2, size.height / 2);
+    final angle = (2 * pi) / sides;
+
+    final angles = List.generate(sides, (index) => index * angle);
+
+    final adjustedRotation = rotation * pi / 180;
+
+    path.moveTo(
+      center.dx + radius * cos(adjustedRotation + angles[0]),
+      center.dy + radius * sin(adjustedRotation + angles[0]),
+    );
+
+    for (final angle in angles) {
+      path.lineTo(
+        center.dx + radius * cos(adjustedRotation + angle),
+        center.dy + radius * sin(adjustedRotation + angle),
+      );
+    }
+
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) =>
+      oldDelegate is _PolygonPainter &&
+      oldDelegate.sides != sides;
+}
