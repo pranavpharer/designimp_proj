@@ -1,6 +1,15 @@
+
 import 'package:flutter/material.dart';
-import 'dart:math';
- 
+
+import '../Widgets/popupreg.dart';
+import '../Widgets/loginanimation.dart';
+
+ var _emailRegex = RegExp(
+  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$",
+);
+bool isValidEmail(String? email) {
+  return _emailRegex.hasMatch(email!);
+}
 class LoginScreen extends StatefulWidget{
    LoginScreen({Key? key}) : super(key: key);
   
@@ -9,8 +18,11 @@ class LoginScreen extends StatefulWidget{
   // static const routeName = '/login';
 }
 class _loginScreenState extends State<LoginScreen>{
+ValueNotifier<String?> passwordNotifier = ValueNotifier('');  
+
 @override  
 Widget build(BuildContext context){
+  
   double screenHeight = MediaQuery.of(context).size.height;
   double screenWidth = MediaQuery.of(context).size.width;
   return   Scaffold(
@@ -18,7 +30,7 @@ Widget build(BuildContext context){
     body: Container(
       height: screenHeight,
       width: screenWidth,
-      padding: EdgeInsets.fromLTRB(10,screenHeight/10, 10, screenHeight/10),
+      padding: EdgeInsets.fromLTRB(10,screenHeight/20, 10, screenHeight/20),
       child:ImageWidget(),
     ),
   );
@@ -26,21 +38,34 @@ Widget build(BuildContext context){
 }
 class ImageWidget extends StatelessWidget {
   ImageWidget({Key? key}) : super(key: key);
+  final _formkey = GlobalKey<FormState>();
+  void _savefom(){
+    _formkey.currentState!.validate();
+  }
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-    return  Column(
+    // final txtmul = Responsive.textMultiplier;
+    return  LayoutBuilder
+    (
+      builder: (BuildContext context, BoxConstraints constraints) {
+       final scnHeight=constraints.maxHeight;
+       final scnWidth = constraints.maxWidth;
+       return SingleChildScrollView(
+        child: Column(
+        mainAxisSize: MainAxisSize.max,
       children: [
        Container(
         // height: double.maxFinite,
         // width: double.maxFinite,
-       padding: EdgeInsets.fromLTRB(screenWidth/10,screenHeight/10,screenWidth/10,screenHeight/10),
-       child: LogoAnimation()
+       padding: EdgeInsets.fromLTRB(scnWidth/20,scnHeight/20,scnWidth/20,scnHeight/20),
+       child: LogoAnimation(),//Container(),//
        ),
-
-        // Text
-        const Text(
+      Form(
+        key: _formkey,
+        child: Column(
+          children: [
+         // Text
+         const Text(
           'Welcome',
           style: TextStyle(
             fontSize: 24,
@@ -48,7 +73,7 @@ class ImageWidget extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: scnHeight/20),
 
         const Text(
           'Log into your account and get started!',
@@ -57,30 +82,42 @@ class ImageWidget extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: scnHeight/20),
 
         // Email
         TextFormField(
           decoration: const InputDecoration(
             labelText: 'Email',
           ),
+          validator: (value) {
+              if (!isValidEmail(value) ){
+               return " Insert valid email";
+              }
+              return null;
+          },
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: scnHeight/20),
 
         // Password
         TextFormField(
           decoration:  const InputDecoration(
             labelText: 'Password',
           ),
+          validator: (value) {
+              if(value!.isEmpty|| value.length<=8){
+                return "Enter valid password";
+              }
+              return null;
+          },
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: scnHeight/20),
 
         // Forgot Password
         TextButton(
           onPressed: () {},
-          child:  const Text(
+          child:  const Text( 
             'Forgot Password?',
             style: TextStyle(
               color: Colors.blue,
@@ -88,98 +125,40 @@ class ImageWidget extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: scnHeight/20),
 
         // Login Button
         ElevatedButton(
-          onPressed: () {},
+          onPressed:_savefom,
           child: const Text('LOG IN'),
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: scnHeight/20),
 
         // Sign Up Button
         TextButton(
-          onPressed: () {},
-          child: const Text(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const RegistrationPopup();
+               },
+            );
+          },
+          child: const  Text(
             'Don\'t have an account? Sign Up',
             style: TextStyle(
               color: Colors.blue,
             ),
           ),
         ),
+      ],)
+      )
+       
       ],
-    );
-  }
-}
-
-class LogoAnimation extends StatefulWidget{
-  @override
-  _LogoAnimationState createState() => _LogoAnimationState();
-}
-class _LogoAnimationState extends State<LogoAnimation> with TickerProviderStateMixin{
-  late AnimationController _animationController;
-  late Animation<double> _rotationAnimation;
-  @override
-  void initState() {
-    super.initState();
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    );
-
-    _rotationAnimation = Tween<double>(
-      begin: 0.0,
-      end:  2 * pi,
-    ).animate(_animationController);
-
-    _animationController.repeat(reverse: true);
-  }
-
-  @override
-void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-Widget build(BuildContext context){
-  return AnimatedBuilder(
-    animation: _rotationAnimation, 
-    builder: (context,child) {
-            return Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.identity()
-                // ..rotateX(
-                //   _rotationAnimation.value,
-                // )
-                ..rotateY(
-                  _rotationAnimation.value,
-                )
-                // ..rotateZ(
-                //   _rotationAnimation.value,
-                // )
-                ,
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
-                      spreadRadius: 5,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                // child: CustomPaint(painter: WPainter(animationValue: _animationController.value),)
-              ),
-            );
-          },
+    ),
+       );
+       }
     );
 }
-
 }
-
