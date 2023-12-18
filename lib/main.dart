@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import './Screens/login_screen.dart';
 
 
-void main() {
-  runApp(
-   App(),
-  );
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); 
+  
+  runApp(App());
 }
 
 class App extends StatelessWidget {
@@ -22,7 +25,17 @@ class App extends StatelessWidget {
       themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       debugShowMaterialGrid: false,
-      home:  HomePage(),
+      home:  StreamBuilder<User?>(stream: FirebaseAuth.instance.authStateChanges(),
+       builder: (context,snapshot){
+        if (snapshot.hasData){
+          return HomePage();
+        }
+        else{
+          return LoginScreen();
+        }
+
+        })
+
       // routes: {LoginScreen.routeName:(context) => const  LoginScreen()},
     );
   }

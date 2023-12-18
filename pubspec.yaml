@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: '>=3.2.2 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -13,13 +13,16 @@ dependencies:
   cupertino_icons: ^1.0.1
   google_maps_flutter: ^2.5.0
   camera:
-  flutter_icons: ^1.1.0
   page_transition:
+  cloud_firestore:
+  firebase_core: ^2.24.2
+
+  firebase_auth:
   video_player: 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.0
   
 flutter:
   uses-material-design: true

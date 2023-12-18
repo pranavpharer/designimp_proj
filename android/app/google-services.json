@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "560684547440",
+    "project_id": "designimp-b0330",
+    "storage_bucket": "designimp-b0330.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560684547440:android:e6617c5d27767a09dae3b5",
+        "android_client_info": {
+          "package_name": "com.example.designimp_proj"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrwZnADbsHwF98j2DjPgBJdql-8n7m-VQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
