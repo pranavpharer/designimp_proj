@@ -26,7 +26,10 @@ class _ImageWidgetState extends State<ImageWidget> {
   
   void _signIn() async{
     _formkey.currentState!.validate();
-    await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text, 
+      password: _passwordController.text
+      );
   }
 
   @override
@@ -108,13 +111,8 @@ class _ImageWidgetState extends State<ImageWidget> {
           onPressed:_signIn,
           child: const Text('LOG IN'),
         ),
-        
-
+      
         SizedBox(height: scnHeight/20),
-
-        
-        
-
         //SizedBox(height: scnHeight/20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
